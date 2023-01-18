@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</head>
+<body class="container">
+    <p class="display-6 text-success">Список имены</p>
+    <ul id="nameList" style="list-style-type:decimal" class="p-2"></ul>
+    <a asp-action="GetForm" class="btn btn-primary p-2">Добавить</a>
+    <div id="imagelist"></div>
+    <script>
+        function onPictureDel(id) {
+            const item = document.getElementById(id);
+            if (item) {
+                fetch(`/api/picture/${id}`,
+                    { method: "delete" })
+                    .then(res => {
+                        if (res.status = 200) item.remove();
+                    });
+            }
+        }
+
+        function onPictureUpd(id) {
+            const item = document.getElementById(id);
+            if (item) {
+                fetch(`/room/update/${id}`,
+                    { method: "post" })
+                    .then(res => {
+                       // if (res.status = 200) item.remove();
+                    });
+            }
+        }
+
+
+        let pl = document.getElementById("nameList")
+        let il = document.getElementById("imagelist")
+        fetch("/api/picture")
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                data.forEach((e) => {
+                    pl.innerHTML += ("<li>" + e.name + "</li>");
+                    il.innerHTML += (`
+                    <div id = "${e.id}" class="border my-2 p-3 row">  
+                    <div class="col-3">
+                        <img src="/pictures/${e.path}" width="300" height="300" />
+                    </div>
+                    <div class="col">
+                        <p class="fs-4">${e.id} - ${e.name} - ${e.path}</p>
+                        </br>
+                        <button class="btn btn-outline-danger" onclick = "onPictureDel(${e.id})">Delete</button>
+                        <a class="btn btn-outline-success" href="/Room/Update/${e.id}">Update</a>
+                    </div>
+                    </div>
+                    `);
+                }
+                )
+            });
+
+        // <button class="btn btn-outline-success" onclick = "onPictureUpd(${e.id})" > Update </button>
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetFileForm</title>
+    <script>
+        function PostFiles() {
+            let upfiles = document.getElementById('upfiles');
+            let name = document.getElementById('name').value;
+            let data = new FormData();
+            data.append('name', name);
+            for (let i = 0; i < upfiles.files.length; i++) { data.append('upfiles', upfiles.files[i]); }
+            return fetch('/api/picture', { method: 'post', body: data });
+        }
+    </script>
+</head>
+<body>
+    <h1>GetFileForm</h1>
+    <form onsubmit="PostFiles().then(res => location.assign('https://localhost:${location.port}/room')); return false;">
+        <input id="name" type="text" name="name" />
+        <input id="upfiles" type="file" name="upfiles" multiple />
+        <button value="OK" name="press">OK</button>
+    </form>
+</body>
+</html>
